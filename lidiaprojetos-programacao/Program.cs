@@ -1,35 +1,35 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Globalization;
 
-namespace Atividade_do_Anteenilsom
+namespace lidiaprojetosolucao
 {
     internal class Program
     {
         static void Main(string[] args)
         {
-        Console.WriteLine("Quantos numeros inteiros você quer somar: ");
-        int n = int.Parse(Console.ReadLine());
+            Funcionario f1 = new Funcionario();
+            Funcionario f2 = new Funcionario();
 
-        int soma = 0;
+            Console.WriteLine("Dados do primeiro funcionário: ");
+            Console.Write("Nome: ");
+            f1.nome = Console.ReadLine();
+            Console.Write("Salário: ");
+            f1.salario = double.Parse(Console.ReadLine());
 
-            for (int i = 0; i < n; i++)
-            {
-                //Console.WritLine("oi);
-                Console.WriteLine("Valor : #{0}", i);
-                int valor = int.Parse(Console.ReadLine());
-                soma += valor;
-            {
-            Console.WriteLine("soma = " + soma);
+            Console.WriteLine("Dados do segundo funcionário: ");
+            Console.Write("Nome: ");
+            f2.nome = Console.ReadLine();
+            Console.Write("Salário: ");
+            f2.salario = double.Parse(Console.ReadLine());
 
+            Console.WriteLine("Primeiro funcionário: "+f1.nome);
+            Console.WriteLine("Segundo funcionário: " + f2.nome);
 
-
-
-            }
-      }
- }
-    
-
+            double media = (f1.salario + f2.salario) / 2;
+            Console.Write("A média dos salários é: " + media);
+        }
+    }
+}
