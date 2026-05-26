@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,13 +17,22 @@ namespace Controle_de_estoque
         public Form1()
         {
             InitializeComponent();
+            ConfigurarGrade();
+            txtNome.CharacterCasing = CharacterCasing.Upper;
         }
-
-        private void Form1_Load(object sender, EventArgs e)
+        private void ConfigurarGrade()
         {
+            dgvEstoque.Columns.Clear();
+            dgvEstoque.Columns.Add("coldNom", "Produto");
+            dgvEstoque.Columns.Add("coldQuantiddade", "Quantidade");
+            dgvEstoque.Columns.Add("coldValor", "Preço Unitário");
+            dgvEstoque.Columns.Add("coldTotalItem", "Total do Item");
 
+            dgvEstoque.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvEstoque.AllowUserToAddRows = false;
+            dgvEstoque.ReadOnly = true;
+            dgvEstoque.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         }
-
         private void txtQuantidade_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
@@ -30,13 +40,54 @@ namespace Controle_de_estoque
                 e.Handled = true;
             }
         }
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
+        }
         private void txtValor_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (char.IsDigit(e.KeyChar) || e.KeyChar == (char)Keys.Back) return;
             if (e.KeyChar == ',' && !txtValor.Text.Contains(",")) return;
             e.Handled = true;
         }
+        private void btnSalvar_Click(object sender, EventArgs e)
+        {
+            string nome = txtNome.Text.Trim();
+            if (string.IsNullOrEmpty(nome) ||
+                !int.TryParse(txtQuantidade.Text, out int quantidade) ||
+                !decimal.TryParse(txtValor.Text, out decimal valor))
+            {
+                MessageBox.Show("Por favor, preeencha todos os campos corretamente!", "Aviso",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning); return;
+            }
+            Produto novoProduto = new Produto
+            {
+                Nome = nome,
+                Quantidade = quantidade,
+                Valor = valor
+            };
+                listaEstoque.Add(novoProduto);
+                AtualizarTabelaTela();
+                txtNome.Clear();
+                txtQuantidade.Clear();
+                txtValor.Clear();
+                txtNome.Focus();
+            }
+        private void AtualizarTabelaTela()
+        {
+            dgvEstoque.Rows.Clear();
+            decimal valorTotalAcumulado = 0;
+
+            foreach (Produto prod in listaEstoque)
+            {
+                decimal totalDoItem = prod.Quantidade * prod.Valor;
+                valorTotalAcumulado += totalDoItem;
+
+                dgvEstoque.Rows.Add(prod.Nome, prod.Quantidade, prod.Valor.ToString("C"),
+                    totalDoItem.ToString("C"));
+            }
+        }
+
     }
     public class Produto
     {
